@@ -133,7 +133,7 @@ class Attribute:
         if self.parent is not None:
             ns = self.parent.resolvePrefix(prefix)
         return ns
-    
+
     def match(self, name=None, ns=None):
         """
         Match by (optional) name and/or (optional) namespace.
@@ -166,16 +166,12 @@ class Attribute:
         return \
             'attr (prefix=%s, name=%s, value=(%s))' %\
                 (self.prefix, self.name, self.value)
-
-    def __str__(self):
-        """ get an xml string representation """
-        return unicode(self).encode('utf-8')
     
-    def __unicode__(self):
+    def __str__(self):
         """ get an xml string representation """
         n = self.qname()
         if self.hasText():
             v = self.value.escape()
         else:
             v = self.value
-        return u'%s="%s"' % (n, v)
+        return '%s="%s"' % (n, v)

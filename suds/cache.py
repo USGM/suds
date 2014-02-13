@@ -17,6 +17,7 @@
 """
 Contains basic caching classes.
 """
+import getpass
 
 import os
 import suds
@@ -26,10 +27,10 @@ from suds.sax.parser import Parser
 from suds.sax.element import Element
 from datetime import datetime as dt
 from datetime import timedelta
-from cStringIO import StringIO
+from io import StringIO
 from logging import getLogger
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except:
     import pickle
 
@@ -138,7 +139,7 @@ class FileCache(Cache):
         @type duration: {unit:value}
         """
         if location is None:
-            location = os.path.join(tmp(), 'suds')
+            location = os.path.join(tmp(), getpass.getuser(), 'suds')
         self.location = location
         self.duration = (None, 0)
         self.setduration(**duration)
@@ -162,7 +163,7 @@ class FileCache(Cache):
         @type duration: {unit:value}
         """
         if len(duration) == 1:
-            arg = duration.items()[0]
+            arg = list(duration.items())[0]
             if not arg[0] in self.units:
                 raise Exception('must be: %s' % str(self.units))
             self.duration = arg
@@ -188,20 +189,23 @@ class FileCache(Cache):
         return self
     
     def put(self, id, bfr):
+        f = None
         try:
             fn = self.__fn(id)
-            f = self.open(fn, 'w')
+            f = self.open(fn, 'wb')
             f.write(bfr)
             f.close()
             return bfr
-        except:
+        except IOError:
             log.debug(id, exc_info=1)
+            if f:
+                f.close()
             return bfr
         
     def putf(self, id, fp):
         try:
             fn = self.__fn(id)
-            f = self.open(fn, 'w')
+            f = self.open(fn, 'wb')
             f.write(fp.read())
             fp.close()
             f.close()
@@ -211,12 +215,15 @@ class FileCache(Cache):
             return fp
         
     def get(self, id):
+        f = None
         try:
             f = self.getf(id)
             bfr = f.read()
             f.close()
             return bfr
-        except:
+        except IOError:
+            if f:
+                f.close()
             pass
     
     def getf(self, id):

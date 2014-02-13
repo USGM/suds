@@ -16,18 +16,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 # written by: Jeff Ortel ( jortel@redhat.com )
 
-import sys
-import suds
 from setuptools import setup, find_packages
 
+__version__ = '0.5.1'
+
 setup(
-    name="suds",
-    version=suds.__version__,
+    name="suds3",
+    version=__version__,
     description="Lightweight SOAP client",
     author="Jeff Ortel",
+    use_2to3=True,
+    zip_safe=False,
     author_email="jortel@redhat.com",
     maintainer="Jeff Ortel",
     maintainer_email="jortel@redhat.com",
     packages=find_packages(exclude=['tests']),
-    url="https://fedorahosted.org/suds",
-)
+    url="https://fedorahosted.org/suds")

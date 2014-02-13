@@ -17,7 +17,7 @@
 """
 Contains classes for basic HTTP (authenticated) transport implementations.
 """
-from urllib2 import HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler
+from urllib.request import HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler
 
 from suds.transport.http import HttpTransport
 from logging import getLogger

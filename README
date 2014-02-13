@@ -471,9 +471,9 @@ version-0.1.7 (04-08-08):
   * Replaced special (text) attribute with __text__ to allow for natural elements named "text"
   
   * Add unicode support by:
-    * Add __unicode__ to all classes with __str__
+    * Add __str__ to all classes with __str__
     * Replace all str() calls with unicode().
-    * __str__() returns UTF-8 encoded result of __unicode__.
+    * __str__() returns UTF-8 encoded result of __str__.
 
   * XML output encoded as UTF-8 which matches the HTTP header and supports unicode.
   

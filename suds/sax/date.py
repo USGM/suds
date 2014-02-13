@@ -49,10 +49,10 @@ class Date:
         if isinstance(date, dt.date):
             self.date = date
             return
-        if isinstance(date, basestring):
+        if isinstance(date, str):
             self.date = self.__parse(date)
             return
-        raise ValueError, type(date)
+        raise ValueError(type(date))
     
     def year(self):
         """
@@ -101,12 +101,9 @@ class Date:
             return dt.date(year, month, day)
         except:
             log.debug(s, exec_info=True)
-            raise ValueError, 'Invalid format "%s"' % s
-        
-    def __str__(self):
-        return unicode(self)
+            raise ValueError('Invalid format "%s"' % s)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.date.isoformat()
 
 
@@ -138,12 +135,12 @@ class Time:
         if isinstance(time, dt.time):
             self.time = time
             return
-        if isinstance(time, basestring):
+        if isinstance(time, str):
             self.time = self.__parse(time)
             if adjusted:
                 self.__adjust()
             return
-        raise ValueError, type(time)
+        raise ValueError(type(time))
     
     def hour(self):
         """
@@ -218,7 +215,7 @@ class Time:
                 return dt.time(hour, minute, second, ms)
         except:
             log.debug(s, exec_info=True)
-            raise ValueError, 'Invalid format "%s"' % s
+            raise ValueError('Invalid format "%s"' % s)
         
     def __second(self, s):
         """
@@ -251,11 +248,8 @@ class Time:
         if len(s) == 1:
             return 0
         raise Exception()
-
-    def __str__(self):
-        return unicode(self)
     
-    def __unicode__(self):
+    def __str__(self):
         time = self.time.isoformat()
         if self.tz.local:
             return '%s%+.2d:00' % (time, self.tz.local)
@@ -288,7 +282,7 @@ class DateTime(Date,Time):
             self.datetime = \
                 dt.datetime.combine(self.date, self.time)
             return
-        if isinstance(date, basestring):
+        if isinstance(date, str):
             part = date.split('T')
             Date.__init__(self, part[0])
             Time.__init__(self, part[1], 0)
@@ -296,7 +290,7 @@ class DateTime(Date,Time):
                 dt.datetime.combine(self.date, self.time)
             self.__adjust()
             return
-        raise ValueError, type(date)
+        raise ValueError(type(date))
     
     def __adjust(self):
         """
@@ -312,14 +306,11 @@ class DateTime(Date,Time):
             self.time = d.time()
         except OverflowError:
             log.warn('"%s" caused overflow, not-adjusted', self.datetime)
-
-    def __str__(self):
-        return unicode(self)
     
-    def __unicode__(self):
+    def __str__(self):
         s = []
-        s.append(Date.__unicode__(self))
-        s.append(Time.__unicode__(self))
+        s.append(Date.__str__(self))
+        s.append(Time.__str__(self))
         return 'T'.join(s)
     
     

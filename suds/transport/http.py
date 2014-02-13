@@ -19,11 +19,11 @@ Contains classes for basic HTTP transport implementations.
 """
 
 import base64
-import socket
-from urllib2 import Request, HTTPError, build_opener, ProxyHandler
+from urllib.request import Request, build_opener, ProxyHandler
+from urllib.error import HTTPError
 from suds.transport import Transport, TransportError, Reply
 from suds.properties import Unskin
-from cookielib import CookieJar
+from http.cookiejar import CookieJar
 from logging import getLogger
 
 log = getLogger(__name__)
@@ -54,16 +54,23 @@ class HttpTransport(Transport):
         
     def open(self, request):
         try:
+            if isinstance(request.url, bytes):
+                request.url = request.url.decode('utf-8')
             url = request.url
             log.debug('opening (%s)', url)
             u2request = Request(url)
             self.proxy = self.options.proxy
-            return self.u2open(u2request)
-        except HTTPError, e:
+            result = self.u2open(u2request)
+            print(result)
+            return result
+        except HTTPError as e:
             raise TransportError(str(e), e.code, e.fp)
 
     def send(self, request):
         result = None
+        if isinstance(request.url, bytes):
+
+            request.url = request.url.decode('utf-8')
         url = request.url
         msg = request.message
         headers = request.headers
@@ -75,9 +82,9 @@ class HttpTransport(Transport):
             log.debug('sending:\n%s', request)
             fp = self.u2open(u2request)
             self.getcookies(fp, u2request)
-            result = Reply(200, fp.headers.dict, fp.read())
+            result = Reply(200, fp.headers, fp.read())
             log.debug('received:\n%s', result)
-        except HTTPError, e:
+        except HTTPError as e:
             if e.code in (202,204):
                 result = None
             else:
