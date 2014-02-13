@@ -25,7 +25,6 @@ setup(
     version=__version__,
     description="Lightweight SOAP client",
     author="Jeff Ortel",
-    use_2to3=True,
     zip_safe=False,
     author_email="jortel@redhat.com",
     maintainer="Jeff Ortel",
