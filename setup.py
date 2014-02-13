@@ -21,7 +21,7 @@ from setuptools import setup, find_packages
 __version__ = '0.5.1'
 
 setup(
-    name="suds3",
+    name="suds",
     version=__version__,
     description="Lightweight SOAP client",
     author="Jeff Ortel",
